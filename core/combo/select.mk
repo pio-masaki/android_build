@@ -1,5 +1,11 @@
+#     _             _     _ ____            _     _
+#    / \   _ __ ___| |__ (_)  _ \ _ __ ___ (_) __| |
+#   / _ \ | '__/ __| '_ \| | | | | '__/ _ \| |/ _` |
+#  / ___ \| | | (__| | | | | |_| | | | (_) | | (_| |
+# /_/   \_\_|  \___|_| |_|_|____/|_|  \___/|_|\__,_|
 #
 # Copyright (C) 2006 The Android Open Source Project
+# Copyright (C) 2014 Łukasz "JustArchi" Domeradzki
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +33,7 @@ combo_os_arch := $($(combo_target)OS)-$($(combo_target)$(combo_2nd_arch_prefix)A
 combo_var_prefix := $(combo_2nd_arch_prefix)$(combo_target)
 
 # Set reasonable defaults for the various variables
+
 
 $(combo_var_prefix)CC := $(CC)
 $(combo_var_prefix)CXX := $(CXX)
@@ -60,6 +67,43 @@ $(combo_var_prefix)EXECUTABLE_SUFFIX :=
 $(combo_var_prefix)SHLIB_SUFFIX := .so
 $(combo_var_prefix)JNILIB_SUFFIX := $($(combo_var_prefix)SHLIB_SUFFIX)
 $(combo_var_prefix)STATIC_LIB_SUFFIX := .a
+$(combo_target)CC := $(CC)
+$(combo_target)CXX := $(CXX)
+$(combo_target)AR := $(AR)
+$(combo_target)STRIP := $(STRIP)
+
+$(combo_target)BINDER_MINI := 0
+
+$(combo_target)HAVE_EXCEPTIONS := 0
+$(combo_target)HAVE_UNIX_FILE_PATH := 1
+$(combo_target)HAVE_WINDOWS_FILE_PATH := 0
+$(combo_target)HAVE_RTTI := 1
+$(combo_target)HAVE_CALL_STACKS := 1
+$(combo_target)HAVE_64BIT_IO := 1
+$(combo_target)HAVE_CLOCK_TIMERS := 1
+$(combo_target)HAVE_PTHREAD_RWLOCK := 1
+$(combo_target)HAVE_STRNLEN := 1
+$(combo_target)HAVE_STRERROR_R_STRRET := 1
+$(combo_target)HAVE_STRLCPY := 0
+$(combo_target)HAVE_STRLCAT := 0
+$(combo_target)HAVE_KERNEL_MODULES := 0
+
+# This is where magic starts
+
+# Global CFLAGS. Usually you don't need to change anything here
+$(combo_target)GLOBAL_CFLAGS := -O3 -DNDEBUG -funsafe-loop-optimizations -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -frerun-cse-after-loop -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized -fno-exceptions -Wno-multichar
+
+# Global Release CFLAGS. Usually you don't need to change anything here
+$(combo_target)RELEASE_CFLAGS := -O3 -DNDEBUG -fno-strict-aliasing -funsafe-loop-optimizations -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -frerun-cse-after-loop -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
+
+# Global LDFLAGS. Usually you don't need to change anything here
+$(combo_target)GLOBAL_LDFLAGS := -Wl,-O1 -Wl,--as-needed -Wl,--relax -Wl,--sort-common -Wl,--gc-sections
+$(combo_target)GLOBAL_ARFLAGS := crsP
+
+$(combo_target)EXECUTABLE_SUFFIX :=
+$(combo_target)SHLIB_SUFFIX := .so
+$(combo_target)JNILIB_SUFFIX := $($(combo_target)SHLIB_SUFFIX)
+$(combo_target)STATIC_LIB_SUFFIX := .a
 
 # Now include the combo for this specific target.
 include $(BUILD_COMBOS)/$(combo_target)$(combo_os_arch).mk
