@@ -181,7 +181,7 @@ include $(BUILD_SYSTEM)/device.mk
 
 # An Infamous build needs only the Infamous product makefiles.
 ifneq ($(INFAMOUS_BUILD),)
-  all_product_configs := $(shell ls device/*/$(INFAMOUS_BUILD)/cm.mk)
+  all_product_configs := $(shell ls device/*/$(INFAMOUS_BUILD)/infamous.mk)
 else
   ifneq ($(strip $(TARGET_BUILD_APPS)),)
   # An unbundled app build needs only the core product makefiles.
